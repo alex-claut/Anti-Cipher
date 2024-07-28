@@ -58,4 +58,13 @@ This function converts a string into hexadecimal format. Each character in the s
 - Searches for specific hexadecimal sequences and strings.
 - Logs messages to the console when suspicious patterns are found.
 
+- Here's how you can include the credit information in English:
+
+---
+
+**Credits:**
+
+- **Stane**: Created the original script.
+- **[Alex]**: Optimized and improved the code.
+
 --- 
