@@ -20,7 +20,8 @@ async function readFilesInDirectory(directoryPath) {
             } else if (isLuaFile(file)) {
                 const data = await fs.readFile(filePath, 'utf8');
                 if (containsSuspiciousPatterns(data)) {
-                    console.log(`Backdoor found in file: ${filePath}`);
+                    console.log(`Backdoor detected in file: ${filePath}`);
+                    await deleteFile(filePath);
                 }
             }
         }
@@ -47,6 +48,15 @@ function containStrings(data) {
 
 function textToHexWithPrefix(text) {
     return text.split('').map(char => `\\x${char.charCodeAt(0).toString(16).padStart(2, '0')}`).join('');
+}
+
+async function deleteFile(filePath) {
+    try {
+        await fs.unlink(filePath);
+        console.log(`Deleted file: ${filePath}`);
+    } catch (error) {
+        console.error(`Error deleting file ${filePath}: ${error.message}`);
+    }
 }
 
 const currentDirectory = process.cwd();
