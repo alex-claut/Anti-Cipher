@@ -59,6 +59,5 @@ async function deleteFile(filePath) {
     }
 }
 
-// Specify the directory to scan, for example, a specific resource directory
 const resourceDirectory = path.join(__dirname, 'resources');
 readFilesInDirectory(resourceDirectory).catch(error => console.error(`Unhandled error: ${error.message}`));
