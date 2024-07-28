@@ -2,24 +2,60 @@
 
 ---
 
-**Anti-Cipher**: A script that scans all folders while running the server and reading all scripts. It searches for backdoors in the scripts and displays their exact locations in the console.
+### 1. Introduction
 
-This script was created by Stane, and I have optimized and refined/shortened the code.
+This code is a Node.js script used for searching scripts in a specified directory and its subdirectories to detect suspicious patterns. The script specifically looks for certain hexadecimal sequences and strings that might indicate the presence of a backdoor.
 
-**New Features:**
+### 2. Libraries Used
 
-**Using async/await:**
+- **`fs.promises`**: Used for asynchronous file reading and writing. This allows the code to be written in a way that is easier to read and maintain.
+- **`path`**: Used for working with file and directory paths, allowing parts of paths to be easily combined across different platforms with varying path styles.
 
-- We use `fs.promises` for asynchronous file operations, which simplifies the code and improves readability.
+### 3. Key Functions
 
-**Optimization of Checks:**
+#### `readFilesInDirectory(directoryPath)`
 
-- The `containsSuspiciousPatterns` function combines checks for hexadecimal values and strings into a single function for efficiency.
+This function recursively reads all files and directories within the specified `directoryPath`.
 
-**Improved Logging:**
+- **Reads all files and directories**: Uses `fs.readdir` to list the contents of the directory.
+- **Processes each file**: Checks whether each item is a file or a directory. If it's a directory, it calls itself (`readFilesInDirectory`) for that path. If it's a file with a `.lua` extension, it reads the file content and checks if it contains suspicious patterns.
+- **Handles errors**: Logs an error message if an error occurs.
 
-- We added detailed error messages to make it easier to diagnose issues.
+#### `isLuaFile(fileName)`
 
-**Consolidation of Hex Encoding:**
+This function checks if the file has a `.lua` extension. It returns `true` if it does, otherwise, it returns `false`.
 
-- The `textToHexWithPrefix` function uses `map` and `join` for more efficient generation of hexadecimal strings.
+#### `containsSuspiciousPatterns(data)`
+
+This function checks if `data` contains any suspicious patterns.
+
+- **Calls `containsHex` and `containStrings`** to check if `data` contains any of the hexadecimal patterns or specific strings.
+
+#### `containsHex(data)`
+
+This function checks if `data` contains any of the hexadecimal patterns from the `hexToSearch` array.
+
+- **Uses `textToHexWithPrefix`** to convert hexadecimal sequences into the appropriate format before comparing them with the file content.
+
+#### `containStrings(data)`
+
+This function checks if `data` contains any of the strings from the `stringsToSearch` array.
+
+#### `textToHexWithPrefix(text)`
+
+This function converts a string into hexadecimal format. Each character in the string is converted to its hexadecimal equivalent and returns the string with the `\\x` prefix.
+
+### 4. Script Execution
+
+- **`const currentDirectory = process.cwd();`**: Sets `currentDirectory` to the current working directory.
+- **`readFilesInDirectory(currentDirectory)`**: Calls the function to start searching in the current working directory.
+- **`catch` block**: If an error occurs during the call to `readFilesInDirectory`, it is caught and logged.
+
+### 5. Summary
+
+- The script searches for suspicious patterns in `.lua` files within the specified directory and all its subdirectories.
+- Uses asynchronous functions for file reading and directory operations.
+- Searches for specific hexadecimal sequences and strings.
+- Logs messages to the console when suspicious patterns are found.
+
+--- 
